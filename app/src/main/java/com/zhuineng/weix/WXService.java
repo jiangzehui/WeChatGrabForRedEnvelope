@@ -74,7 +74,7 @@ public class WXService extends AccessibilityService {
                 if (!texts.isEmpty()) {
                     for (CharSequence text : texts) {
                         String content = text.toString();
-                        if (content.contains("[微信红包]")) {
+                         if (content.contains("[微信红包]")) {
                             //模拟打开通知栏消息，即打开微信
                             if (event.getParcelableData() != null &&
                                     event.getParcelableData() instanceof Notification) {
