@@ -34,6 +34,7 @@ public class WXService extends AccessibilityService {
 //    onInterrupt()：服务中断时的回调
     private List<AccessibilityNodeInfo> parents;
     private boolean flag = false;//判断是否是抢完红包后返回的
+
 //    int lastNum = 0;
 //    boolean bool =true;
 
@@ -103,19 +104,19 @@ public class WXService extends AccessibilityService {
         Log.e("demo", eventType + "");
         switch (eventType) {
 
-//            case 2048:
-//                String className = event.getClassName().toString();
-//                Log.e("demo", className);
-//
-//                //点击最后一个红包
-//                Log.e("demo", "查询是否有红包，如果有则自动点击红包");
-//                if(bool){
-//                    bool = false;
-//                    getLastPacket();
-//                }
-//
-//
-//                break;
+//           //当通知栏发生改变时
+            case 2048:
+                String pubclassName = event.getClassName().toString();
+
+                Log.e("AAAAAAAA", "有2048事件" + pubclassName);
+
+                if (pubclassName.equals("android.widget.TextView") && MainActivity.ALL) {
+                    Log.e("AAAAAAAA", "有2048事件被识别" + pubclassName);
+                    getLastPacket();
+                }
+
+
+                break;
 
             //当通知栏发生改变时
             case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
@@ -154,6 +155,7 @@ public class WXService extends AccessibilityService {
                     flag = true;
                     Log.e("demo", "开红包");
                     inputClick("com.tencent.mm:id/lucky_money_recieve_open");
+                    //inputClick("com.tencent.mm:id/bag");
                 } else if (classNames.equals("com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI")) {
                     //退出红包
                     Log.e("demo", "退出红包");

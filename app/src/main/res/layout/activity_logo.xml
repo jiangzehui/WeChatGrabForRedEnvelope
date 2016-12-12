@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:textSize="20dp"
         android:textColor="#ffffff"
-        android:text="Hello!微信自动抢红包插件"
+        android:text="Hello!自动抢红包插件"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
