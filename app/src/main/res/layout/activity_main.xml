@@ -7,17 +7,18 @@
     tools:context="com.zhuineng.weix.MainActivity">
 
     <Button
-        android:layout_margin="10dp"
         android:id="@+id/btn"
         android:layout_width="wrap_content"
+
         android:layout_height="wrap_content"
-        android:text="前往开启自动自动抢红包功能"/>
+        android:layout_margin="10dp"
+        android:text="前往开启自动自动抢红包功能" />
 
     <Switch
         android:id="@+id/sw"
-        android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="是否开启锁屏后自动抢红包功能 "/>
+        android:layout_margin="10dp"
+        android:text="是否开启锁屏后自动抢红包功能 " />
 
 </LinearLayout>

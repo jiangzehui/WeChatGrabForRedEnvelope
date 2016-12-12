@@ -54,7 +54,7 @@ public class WXService extends AccessibilityService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Intent notificationIntent = new Intent(this, MainActivity.class);
+        Intent notificationIntent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification notification = new Notification.Builder(this)
                 .setSmallIcon(R.mipmap.logo)
@@ -65,6 +65,7 @@ public class WXService extends AccessibilityService {
                 .setOngoing(true)
                 .setContentIntent(pendingIntent)
                 .build();
+
         /*使用startForeground,如果id为0，那么notification将不会显示*/
         startForeground(1, notification);
 
