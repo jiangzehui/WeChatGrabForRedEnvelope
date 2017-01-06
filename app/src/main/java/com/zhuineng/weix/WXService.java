@@ -32,7 +32,7 @@ public class WXService extends AccessibilityService {
 //    onKeyEvent(KeyEvent event)：如果允许服务监听按键操作，该方法是按键事件的回调，需要注意，这个过程发生了系统处理按键事件之前
 //    onServiceConnected()：系统成功绑定该服务时被触发，也就是当你在设置中开启相应的服务，系统成功的绑定了该服务时会触发，通常我们可以在这里做一些初始化操作
 //    onInterrupt()：服务中断时的回调
-    private List<AccessibilityNodeInfo> parents;
+    private List<AccessibilityNodeInfo> list;
     private boolean flag = false;//判断是否是抢完红包后返回的
 
 //    int lastNum = 0;
@@ -89,7 +89,7 @@ public class WXService extends AccessibilityService {
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
-        parents = new ArrayList<>();
+        list = new ArrayList<>();
         Log.i("wxservice", "服务已启动");
     }
 
@@ -104,19 +104,6 @@ public class WXService extends AccessibilityService {
         Log.e("demo", eventType + "");
         switch (eventType) {
 
-//           //当通知栏发生改变时
-            case 2048:
-                String pubclassName = event.getClassName().toString();
-
-                Log.e("AAAAAAAA", "有2048事件" + pubclassName);
-
-                if (pubclassName.equals("android.widget.TextView") && MainActivity.ALL) {
-                    Log.e("AAAAAAAA", "有2048事件被识别" + pubclassName);
-                    getLastPacket();
-                }
-
-
-                break;
 
             //当通知栏发生改变时
             case AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED:
@@ -154,18 +141,11 @@ public class WXService extends AccessibilityService {
                     //开红包
                     flag = true;
                     Log.e("demo", "开红包");
-                    inputClick("com.tencent.mm:id/lucky_money_recieve_open");
-                    //inputClick("com.tencent.mm:id/bag");
+                    //inputClick("com.tencent.mm:id/lucky_money_recieve_open");
+                    inputClick("com.tencent.mm:id/bdh");
                 } else if (classNames.equals("com.tencent.mm.plugin.luckymoney.ui.LuckyMoneyDetailUI")) {
                     //退出红包
                     Log.e("demo", "退出红包");
-                    //Home键
-                    //performGlobalAction(AccessibilityService.GLOBAL_ACTION_BACK);
-                    if (flag) {
-                        Intent resolveIntent = getPackageManager().getLaunchIntentForPackage("com.zhuineng.weix");// 这里的packname就是从上面得到的目标apk的包名
-                        startActivity(resolveIntent);
-                        flag = false;
-                    }
 
 
                 }
@@ -197,30 +177,12 @@ public class WXService extends AccessibilityService {
      */
     private void getLastPacket() {
         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
-        //parents.clear();
+        //list.clear();
         recycle(rootNode);
-        if (parents.size() > 0) {
-            parents.get(parents.size() - 1).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-            parents = new ArrayList<>();
-//            Log.e("demo", "lastNum=" + lastNum + "-----parents.size=" + parents.size());
-//            if (lastNum < parents.size()) {
-//
-//                parents.get(parents.size() - 1).performAction(AccessibilityNodeInfo.ACTION_CLICK);
-//                lastNum = parents.size();
-//                parents=new ArrayList<>();
-//                bool = true;
-//            }else{
-//                parents=new ArrayList<>();
-//                bool = true;
-//            }
-
-
-        } else {
-//            parents=new ArrayList<>();
-//            bool = true;
+        if (list.size() > 0) {
+            list.get(list.size() - 1).performAction(AccessibilityNodeInfo.ACTION_CLICK);
+            list = new ArrayList<>();
         }
-
-
     }
 
     /**
@@ -244,7 +206,7 @@ public class WXService extends AccessibilityService {
                     AccessibilityNodeInfo parent = info.getParent();
                     while (parent != null) {
                         if (parent.isClickable()) {
-                            parents.add(parent);
+                            list.add(parent);
                             break;
                         }
                         parent = parent.getParent();
@@ -268,29 +230,23 @@ public class WXService extends AccessibilityService {
     private PowerManager.WakeLock wl = null;
 
     private void wakeAndUnlock() {
-        if (MainActivity.isLock) {
-            //获取电源管理器对象
-            pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
-            //获取PowerManager.WakeLock对象，后面的参数|表示同时传入两个值，最后的是调试用的Tag
-            wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "bright");
+        //获取电源管理器对象
+        pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
-            //点亮屏幕
-            wl.acquire();
+        //获取PowerManager.WakeLock对象，后面的参数|表示同时传入两个值，最后的是调试用的Tag
+        wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "bright");
 
-            //得到键盘锁管理器对象
-            km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-            kl = km.newKeyguardLock("unLock");
+        //点亮屏幕
+        wl.acquire();
 
-            //解锁
-            kl.disableKeyguard();
-        } else {
-            //锁屏
-            kl.reenableKeyguard();
+        //得到键盘锁管理器对象
+        km = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
+        kl = km.newKeyguardLock("unLock");
 
-            //释放wakeLock，关灯
-            wl.release();
-        }
+        //解锁
+        kl.disableKeyguard();
+
 
     }
 
